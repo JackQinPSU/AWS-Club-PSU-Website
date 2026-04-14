@@ -4,6 +4,9 @@ import { Cloud, Code, Users, Sparkles, Server, Zap, CalendarDays } from "lucide-
 import { ProjectCard } from "./components/ProjectCard";
 import { EventCard } from "./components/EventCard";
 
+const LINKTREE_URL =
+  "https://linktr.ee/aws.psu?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGn1h7pSofemCCtxrAGYLR_sKkt21hPeDtdtneMT8Zo8DyVj_mtI40F91hTFNE_aem_PFCGIbrpMFgF-eBIXb0cpA";
+
 type Tab = "home" | "events";
 
 export default function App() {
@@ -34,9 +37,9 @@ export default function App() {
   ];
 
   const features = [
-    { icon: Cloud, label: "Cloud Native", color: "from-blue-400 to-blue-600" },
-    { icon: Code, label: "Hands-on Labs", color: "from-blue-500 to-blue-700" },
-    { icon: Users, label: "Community", color: "from-blue-300 to-blue-500" },
+    { icon: Cloud, label: "Cloud Native", color: "from-orange-400 to-orange-600" },
+    { icon: Code, label: "Hands-on Labs", color: "from-orange-500 to-amber-600" },
+    { icon: Users, label: "Community", color: "from-amber-400 to-orange-500" },
   ];
 
   const upcomingEvents = [
@@ -49,7 +52,7 @@ export default function App() {
       location: "IST Building, Room 220",
       capacity: "40 spots available",
       tag: "Workshop",
-      tagColor: "bg-blue-100 text-blue-700",
+      tagColor: "bg-blue-900/60 text-blue-300",
     },
     {
       title: "Cloud Cert Study Group – AWS SAA-C03",
@@ -60,7 +63,7 @@ export default function App() {
       location: "Pattee Library, Collaboration Room 3",
       capacity: "25 spots available",
       tag: "Study Group",
-      tagColor: "bg-green-100 text-green-700",
+      tagColor: "bg-green-900/60 text-green-300",
     },
     {
       title: "Guest Speaker: AWS Solutions Architect",
@@ -71,7 +74,7 @@ export default function App() {
       location: "Westgate Building, Auditorium A",
       capacity: "100 seats",
       tag: "Speaker",
-      tagColor: "bg-purple-100 text-purple-700",
+      tagColor: "bg-purple-900/60 text-purple-300",
     },
     {
       title: "Cloud Hackathon: Build for Impact",
@@ -82,7 +85,7 @@ export default function App() {
       location: "HUB Robeson Center, Innovation Lab",
       capacity: "Unlimited — form a team of 2–4",
       tag: "Hackathon",
-      tagColor: "bg-orange-100 text-orange-700",
+      tagColor: "bg-orange-900/60 text-orange-300",
     },
   ];
 
@@ -96,7 +99,7 @@ export default function App() {
       location: "IST Building, Room 220",
       capacity: "38 attended",
       tag: "Workshop",
-      tagColor: "bg-slate-100 text-slate-500",
+      tagColor: "bg-gray-700 text-gray-400",
     },
     {
       title: "Resume & LinkedIn Review Session",
@@ -107,7 +110,7 @@ export default function App() {
       location: "Zoom (Virtual)",
       capacity: "22 attended",
       tag: "Career",
-      tagColor: "bg-slate-100 text-slate-500",
+      tagColor: "bg-gray-700 text-gray-400",
     },
   ];
 
@@ -117,50 +120,50 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0D1117] text-gray-100 overflow-x-hidden">
       {/* Animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/4 -left-48 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl"
+          className="absolute top-1/4 -left-48 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"
         />
         <motion.div
           animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }}
           transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-1/4 -right-48 w-96 h-96 bg-blue-300/30 rounded-full blur-3xl"
+          className="absolute bottom-1/4 -right-48 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl"
         />
       </div>
 
       {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-blue-100 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-[#0D1117]/90 backdrop-blur-md border-b border-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-[#FF9900] rounded-lg flex items-center justify-center">
               <Cloud className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-slate-800 text-lg leading-tight">
+            <span className="font-bold text-white text-lg leading-tight">
               AWS Cloud Club
             </span>
           </div>
 
           {/* Tabs */}
-          <div className="flex items-center gap-1 bg-blue-50 rounded-xl p-1">
+          <div className="flex items-center gap-1 bg-gray-800 rounded-xl p-1">
             {navItems.map(({ label, tab }) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`relative px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   activeTab === tab
-                    ? "text-blue-700"
-                    : "text-slate-500 hover:text-slate-700"
+                    ? "text-[#FF9900]"
+                    : "text-gray-400 hover:text-gray-200"
                 }`}
               >
                 {activeTab === tab && (
                   <motion.div
                     layoutId="nav-pill"
-                    className="absolute inset-0 bg-white rounded-lg shadow-sm border border-blue-200"
+                    className="absolute inset-0 bg-gray-700 rounded-lg shadow-sm border border-gray-600"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -170,13 +173,16 @@ export default function App() {
           </div>
 
           {/* Join CTA */}
-          <motion.button
+          <motion.a
+            href={LINKTREE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-5 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl font-semibold text-sm shadow-md shadow-blue-300/40 transition-all"
+            className="px-5 py-2 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 text-white rounded-xl font-semibold text-sm shadow-md shadow-orange-500/30 transition-all"
           >
             Join the Club
-          </motion.button>
+          </motion.a>
         </div>
       </nav>
 
@@ -197,17 +203,17 @@ export default function App() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8 }}
-                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-200 backdrop-blur-sm rounded-full border border-blue-300"
+                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30"
                 >
-                  <Sparkles className="w-4 h-4 text-blue-600" />
-                  <span className="text-blue-700">Penn State University</span>
+                  <Sparkles className="w-4 h-4 text-[#FF9900]" />
+                  <span className="text-orange-300">Penn State University</span>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 bg-clip-text text-transparent"
+                  className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent"
                 >
                   AWS Cloud Club
                 </motion.h1>
@@ -216,7 +222,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-xl md:text-2xl text-slate-700 mb-12 max-w-3xl mx-auto"
+                  className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
                 >
                   Building the future with cloud technology. Join us to learn,
                   innovate, and connect with fellow cloud enthusiasts.
@@ -228,18 +234,21 @@ export default function App() {
                   transition={{ duration: 0.8, delay: 0.6 }}
                   className="flex flex-col sm:flex-row gap-4 justify-center"
                 >
-                  <motion.button
+                  <motion.a
+                    href={LINKTREE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-xl font-semibold text-lg text-white shadow-lg shadow-blue-300/50 transition-all"
+                    className="px-8 py-4 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 rounded-xl font-semibold text-lg text-white shadow-lg shadow-orange-500/30 transition-all"
                   >
                     Join the Club
-                  </motion.button>
+                  </motion.a>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setActiveTab("events")}
-                    className="px-8 py-4 bg-white hover:bg-blue-50 backdrop-blur-sm rounded-xl font-semibold text-lg text-blue-700 border border-blue-300 transition-all"
+                    className="px-8 py-4 bg-gray-800 hover:bg-gray-700 backdrop-blur-sm rounded-xl font-semibold text-lg text-orange-400 border border-gray-700 hover:border-orange-500/50 transition-all"
                   >
                     View Events
                   </motion.button>
@@ -256,7 +265,7 @@ export default function App() {
                     <motion.div
                       key={index}
                       whileHover={{ y: -5 }}
-                      className="p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-200 hover:border-blue-400 transition-all shadow-sm hover:shadow-md"
+                      className="p-6 bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-700 hover:border-orange-500/50 transition-all shadow-sm hover:shadow-md hover:shadow-orange-500/10"
                     >
                       <motion.div
                         whileHover={{ rotate: 360 }}
@@ -265,7 +274,7 @@ export default function App() {
                       >
                         <feature.icon className="w-6 h-6 text-white" />
                       </motion.div>
-                      <h3 className="text-lg font-semibold text-slate-800">
+                      <h3 className="text-lg font-semibold text-white">
                         {feature.label}
                       </h3>
                     </motion.div>
@@ -279,11 +288,11 @@ export default function App() {
                 transition={{ duration: 2, repeat: Infinity }}
                 className="absolute bottom-10 left-1/2 -translate-x-1/2"
               >
-                <div className="w-6 h-10 border-2 border-blue-500 rounded-full flex justify-center p-2">
+                <div className="w-6 h-10 border-2 border-orange-400 rounded-full flex justify-center p-2">
                   <motion.div
                     animate={{ y: [0, 12, 0] }}
                     transition={{ duration: 2, repeat: Infinity }}
-                    className="w-1.5 h-1.5 bg-blue-600 rounded-full"
+                    className="w-1.5 h-1.5 bg-[#FF9900] rounded-full"
                   />
                 </div>
               </motion.div>
@@ -299,14 +308,14 @@ export default function App() {
                   transition={{ duration: 0.6 }}
                   className="text-center mb-16"
                 >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-200 backdrop-blur-sm rounded-full border border-blue-300 mb-6">
-                    <Server className="w-4 h-4 text-blue-600" />
-                    <span className="text-blue-700">Our Work</span>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30 mb-6">
+                    <Server className="w-4 h-4 text-[#FF9900]" />
+                    <span className="text-orange-300">Our Work</span>
                   </div>
-                  <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 bg-clip-text text-transparent">
+                  <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent">
                     Featured Projects
                   </h2>
-                  <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                  <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                     Explore our latest cloud solutions built with AWS services
                   </p>
                 </motion.div>
@@ -329,23 +338,26 @@ export default function App() {
                   transition={{ duration: 0.6 }}
                   className="relative"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-400 rounded-3xl blur-xl opacity-30"></div>
-                  <div className="relative bg-gradient-to-br from-white to-blue-50 backdrop-blur-sm p-12 rounded-3xl border border-blue-300 shadow-xl">
-                    <Zap className="w-16 h-16 text-blue-600 mx-auto mb-6" />
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-[#FF9900] rounded-3xl blur-xl opacity-15"></div>
+                  <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 backdrop-blur-sm p-12 rounded-3xl border border-gray-700 shadow-xl">
+                    <Zap className="w-16 h-16 text-[#FF9900] mx-auto mb-6" />
+                    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
                       Ready to Build the Future?
                     </h2>
-                    <p className="text-xl text-slate-700 mb-8">
+                    <p className="text-xl text-gray-300 mb-8">
                       Join us for workshops, hackathons, and cloud certification
                       prep sessions.
                     </p>
-                    <motion.button
+                    <motion.a
+                      href={LINKTREE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-10 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl font-semibold text-lg shadow-lg shadow-blue-300/50 transition-all"
+                      className="inline-block px-10 py-4 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 text-white rounded-xl font-semibold text-lg shadow-lg shadow-orange-500/30 transition-all"
                     >
                       Get Started Today
-                    </motion.button>
+                    </motion.a>
                   </div>
                 </motion.div>
               </div>
@@ -368,17 +380,17 @@ export default function App() {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
-                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-100 to-blue-200 backdrop-blur-sm rounded-full border border-blue-300"
+                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30"
                 >
-                  <CalendarDays className="w-4 h-4 text-blue-600" />
-                  <span className="text-blue-700">Club Events</span>
+                  <CalendarDays className="w-4 h-4 text-[#FF9900]" />
+                  <span className="text-orange-300">Club Events</span>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.15 }}
-                  className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-700 bg-clip-text text-transparent"
+                  className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent"
                 >
                   Events
                 </motion.h1>
@@ -387,7 +399,7 @@ export default function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6, delay: 0.3 }}
-                  className="text-xl text-slate-600 max-w-2xl mx-auto"
+                  className="text-xl text-gray-400 max-w-2xl mx-auto"
                 >
                   Workshops, study groups, hackathons, and more — come learn,
                   build, and grow with us.
@@ -403,9 +415,9 @@ export default function App() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
-                  className="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3"
+                  className="text-3xl font-bold text-white mb-8 flex items-center gap-3"
                 >
-                  <span className="w-2 h-8 bg-gradient-to-b from-blue-500 to-blue-700 rounded-full inline-block" />
+                  <span className="w-2 h-8 bg-gradient-to-b from-orange-400 to-[#FF9900] rounded-full inline-block" />
                   Upcoming Events
                 </motion.h2>
 
@@ -425,9 +437,9 @@ export default function App() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
-                  className="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3"
+                  className="text-3xl font-bold text-gray-400 mb-8 flex items-center gap-3"
                 >
-                  <span className="w-2 h-8 bg-gradient-to-b from-slate-300 to-slate-400 rounded-full inline-block" />
+                  <span className="w-2 h-8 bg-gradient-to-b from-gray-500 to-gray-600 rounded-full inline-block" />
                   Past Events
                 </motion.h2>
 
@@ -448,8 +460,8 @@ export default function App() {
       </AnimatePresence>
 
       {/* Footer */}
-      <footer className="relative py-12 px-6 border-t border-blue-200">
-        <div className="max-w-7xl mx-auto text-center text-slate-600">
+      <footer className="relative py-12 px-6 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto text-center text-gray-500">
           <p>&copy; 2026 AWS Cloud Club at Penn State. All rights reserved.</p>
         </div>
       </footer>
