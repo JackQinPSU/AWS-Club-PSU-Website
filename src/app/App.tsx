@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Cloud, Code, Users, Sparkles, Server, Zap, CalendarDays } from "lucide-react";
+import { Cloud, CalendarDays, Users, Camera, Server, Zap } from "lucide-react";
 import { ProjectCard } from "./components/ProjectCard";
 import { EventCard } from "./components/EventCard";
+import { TeamCard } from "./components/TeamCard";
 
 const LINKTREE_URL =
   "https://linktr.ee/aws.psu?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGn1h7pSofemCCtxrAGYLR_sKkt21hPeDtdtneMT8Zo8DyVj_mtI40F91hTFNE_aem_PFCGIbrpMFgF-eBIXb0cpA";
 
-type Tab = "home" | "events";
+type Tab = "home" | "events" | "team" | "gallery";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
@@ -36,12 +37,6 @@ export default function App() {
     },
   ];
 
-  const features = [
-    { icon: Cloud, label: "Cloud Native", color: "from-orange-400 to-orange-600" },
-    { icon: Code, label: "Hands-on Labs", color: "from-orange-500 to-amber-600" },
-    { icon: Users, label: "Community", color: "from-amber-400 to-orange-500" },
-  ];
-
   const upcomingEvents = [
     {
       title: "Serverless Workshop: Build & Deploy",
@@ -52,7 +47,7 @@ export default function App() {
       location: "IST Building, Room 220",
       capacity: "40 spots available",
       tag: "Workshop",
-      tagColor: "bg-blue-900/60 text-blue-300",
+      tagColor: "text-blue-400 border-blue-400/40",
     },
     {
       title: "Cloud Cert Study Group – AWS SAA-C03",
@@ -63,7 +58,7 @@ export default function App() {
       location: "Pattee Library, Collaboration Room 3",
       capacity: "25 spots available",
       tag: "Study Group",
-      tagColor: "bg-green-900/60 text-green-300",
+      tagColor: "text-green-400 border-green-400/40",
     },
     {
       title: "Guest Speaker: AWS Solutions Architect",
@@ -74,7 +69,7 @@ export default function App() {
       location: "Westgate Building, Auditorium A",
       capacity: "100 seats",
       tag: "Speaker",
-      tagColor: "bg-purple-900/60 text-purple-300",
+      tagColor: "text-purple-400 border-purple-400/40",
     },
     {
       title: "Cloud Hackathon: Build for Impact",
@@ -85,7 +80,7 @@ export default function App() {
       location: "HUB Robeson Center, Innovation Lab",
       capacity: "Unlimited — form a team of 2–4",
       tag: "Hackathon",
-      tagColor: "bg-orange-900/60 text-orange-300",
+      tagColor: "text-[#FF9900] border-[#FF9900]/40",
     },
   ];
 
@@ -99,7 +94,7 @@ export default function App() {
       location: "IST Building, Room 220",
       capacity: "38 attended",
       tag: "Workshop",
-      tagColor: "bg-gray-700 text-gray-400",
+      tagColor: "text-[#666] border-[#444]",
     },
     {
       title: "Resume & LinkedIn Review Session",
@@ -110,361 +105,376 @@ export default function App() {
       location: "Zoom (Virtual)",
       capacity: "22 attended",
       tag: "Career",
-      tagColor: "bg-gray-700 text-gray-400",
+      tagColor: "text-[#666] border-[#444]",
     },
+  ];
+
+  const teamMembers = [
+    { name: "Alex Johnson", title: "President", linkedin: "#" },
+    { name: "Maya Patel", title: "Vice President", linkedin: "#" },
+    { name: "Chris Lee", title: "Technical Lead", linkedin: "#" },
+    { name: "Sarah Kim", title: "Events Coordinator", linkedin: "#" },
+    { name: "Jordan Rivera", title: "Marketing Lead", linkedin: "#" },
+    { name: "Taylor Chen", title: "Secretary", linkedin: "#" },
+    { name: "Morgan Davis", title: "Treasurer", linkedin: "#" },
+    { name: "Casey Wilson", title: "Social Media Manager", linkedin: "#" },
+  ];
+
+  const galleryItems = [
+    { label: "Serverless Workshop", date: "Feb 2026", span: "col-span-2" },
+    { label: "Club Kickoff", date: "Jan 2026", span: "" },
+    { label: "AWS Hackathon", date: "Nov 2025", span: "" },
+    { label: "Guest Speaker Night", date: "Oct 2025", span: "" },
+    { label: "Study Group Session", date: "Mar 2026", span: "" },
+    { label: "Resume Review Day", date: "Mar 2026", span: "col-span-2" },
+    { label: "Cloud Cert Prep", date: "Feb 2026", span: "" },
+    { label: "Team Meetup", date: "Dec 2025", span: "" },
+    { label: "Industry Panel", date: "Apr 2026", span: "" },
   ];
 
   const navItems: { label: string; tab: Tab }[] = [
     { label: "Home", tab: "home" },
     { label: "Events", tab: "events" },
+    { label: "Team", tab: "team" },
+    { label: "Gallery", tab: "gallery" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#0D1117] text-gray-100 overflow-x-hidden">
-      {/* Animated background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-1/4 -left-48 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], rotate: [0, -90, 0] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-1/4 -right-48 w-96 h-96 bg-orange-600/10 rounded-full blur-3xl"
-        />
-      </div>
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
 
-      {/* Navigation Bar */}
-      <nav className="sticky top-0 z-50 bg-[#0D1117]/90 backdrop-blur-md border-b border-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-          {/* Logo */}
+      {/* Nav */}
+      <nav className="sticky top-0 z-50 bg-[#0a0a0a] border-b border-[#2a2a2a]">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-14">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-[#FF9900] rounded-lg flex items-center justify-center">
-              <Cloud className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-bold text-white text-lg leading-tight">
+            <Cloud className="w-5 h-5 text-[#FF9900]" />
+            <span className="font-bold text-white text-sm tracking-tight">
               AWS Cloud Club
             </span>
           </div>
 
-          {/* Tabs */}
-          <div className="flex items-center gap-1 bg-gray-800 rounded-xl p-1">
+          <div className="flex items-center gap-6">
             {navItems.map(({ label, tab }) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`relative px-5 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                className={`relative text-sm font-medium pb-0.5 transition-colors ${
                   activeTab === tab
-                    ? "text-[#FF9900]"
-                    : "text-gray-400 hover:text-gray-200"
+                    ? "text-white"
+                    : "text-[#777] hover:text-[#bbb]"
                 }`}
               >
+                {label}
                 {activeTab === tab && (
                   <motion.div
-                    layoutId="nav-pill"
-                    className="absolute inset-0 bg-gray-700 rounded-lg shadow-sm border border-gray-600"
+                    layoutId="nav-underline"
+                    className="absolute -bottom-[1px] left-0 right-0 h-px bg-[#FF9900]"
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
-                <span className="relative z-10">{label}</span>
               </button>
             ))}
           </div>
 
-          {/* Join CTA */}
-          <motion.a
+          <a
             href={LINKTREE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-5 py-2 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 text-white rounded-xl font-semibold text-sm shadow-md shadow-orange-500/30 transition-all"
+            className="px-4 py-1.5 bg-[#FF9900] text-black text-sm font-bold rounded transition-opacity hover:opacity-90"
           >
-            Join the Club
-          </motion.a>
+            Join
+          </a>
         </div>
       </nav>
 
-      {/* Page Content */}
+      {/* Pages */}
       <AnimatePresence mode="wait">
+
+        {/* HOME */}
         {activeTab === "home" && (
           <motion.div
             key="home"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            {/* Hero Section */}
-            <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-20">
-              <div className="max-w-7xl mx-auto text-center relative z-10">
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30"
+            {/* Hero */}
+            <section className="max-w-6xl mx-auto px-6 pt-32 pb-24">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-6">
+                Penn State University
+              </p>
+              <h1 className="text-6xl md:text-8xl font-bold text-white leading-none tracking-tight mb-6">
+                AWS Cloud Club
+              </h1>
+              <p className="text-lg text-[#999] max-w-xl mb-10 leading-relaxed">
+                Building the future with cloud technology. Learn, build, and connect
+                with fellow cloud enthusiasts at Penn State.
+              </p>
+              <div className="flex items-center gap-4">
+                <a
+                  href={LINKTREE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#FF9900] text-black font-bold text-sm rounded transition-opacity hover:opacity-90"
                 >
-                  <Sparkles className="w-4 h-4 text-[#FF9900]" />
-                  <span className="text-orange-300">Penn State University</span>
-                </motion.div>
-
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="text-7xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent"
+                  Join the Club
+                </a>
+                <button
+                  onClick={() => setActiveTab("events")}
+                  className="px-6 py-3 border border-[#3a3a3a] text-[#aaa] text-sm font-medium rounded hover:border-[#666] hover:text-white transition-colors"
                 >
-                  AWS Cloud Club
-                </motion.h1>
-
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                  className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
-                >
-                  Building the future with cloud technology. Join us to learn,
-                  innovate, and connect with fellow cloud enthusiasts.
-                </motion.p>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="flex flex-col sm:flex-row gap-4 justify-center"
-                >
-                  <motion.a
-                    href={LINKTREE_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-8 py-4 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 rounded-xl font-semibold text-lg text-white shadow-lg shadow-orange-500/30 transition-all"
-                  >
-                    Join the Club
-                  </motion.a>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setActiveTab("events")}
-                    className="px-8 py-4 bg-gray-800 hover:bg-gray-700 backdrop-blur-sm rounded-xl font-semibold text-lg text-orange-400 border border-gray-700 hover:border-orange-500/50 transition-all"
-                  >
-                    View Events
-                  </motion.button>
-                </motion.div>
-
-                {/* Feature Cards */}
-                <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.8 }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 max-w-5xl mx-auto"
-                >
-                  {features.map((feature, index) => (
-                    <motion.div
-                      key={index}
-                      whileHover={{ y: -5 }}
-                      className="p-6 bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-700 hover:border-orange-500/50 transition-all shadow-sm hover:shadow-md hover:shadow-orange-500/10"
-                    >
-                      <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.5 }}
-                        className={`w-12 h-12 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-4 mx-auto`}
-                      >
-                        <feature.icon className="w-6 h-6 text-white" />
-                      </motion.div>
-                      <h3 className="text-lg font-semibold text-white">
-                        {feature.label}
-                      </h3>
-                    </motion.div>
-                  ))}
-                </motion.div>
+                  View Events
+                </button>
               </div>
 
-              {/* Scroll Indicator */}
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2"
-              >
-                <div className="w-6 h-10 border-2 border-orange-400 rounded-full flex justify-center p-2">
-                  <motion.div
-                    animate={{ y: [0, 12, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="w-1.5 h-1.5 bg-[#FF9900] rounded-full"
-                  />
-                </div>
-              </motion.div>
+              {/* Stats row */}
+              <div className="flex items-center gap-12 mt-20 pt-10 border-t border-[#1a1a1a]">
+                {[
+                  { value: "200+", label: "Members" },
+                  { value: "20+", label: "Events hosted" },
+                  { value: "10+", label: "AWS certifications" },
+                ].map((stat) => (
+                  <div key={stat.label}>
+                    <p className="text-3xl font-bold text-white">{stat.value}</p>
+                    <p className="text-sm text-[#888] mt-1">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
             </section>
 
-            {/* Projects Section */}
-            <section className="relative py-32 px-6">
-              <div className="max-w-7xl mx-auto">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="text-center mb-16"
-                >
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30 mb-6">
-                    <Server className="w-4 h-4 text-[#FF9900]" />
-                    <span className="text-orange-300">Our Work</span>
+            {/* Divider */}
+            <div className="border-t border-[#2a2a2a]" />
+
+            {/* What we do */}
+            <section className="max-w-6xl mx-auto px-6 py-20">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#777] mb-10">
+                What we do
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#2a2a2a]">
+                {[
+                  {
+                    label: "Cloud Native",
+                    body: "Hands-on experience with core AWS services — from compute to storage to networking.",
+                  },
+                  {
+                    label: "Hands-on Labs",
+                    body: "Build real projects. No slides-only sessions. Every meeting has something to ship.",
+                  },
+                  {
+                    label: "Community",
+                    body: "A network of students, alumni, and professionals who take cloud seriously.",
+                  },
+                ].map((item) => (
+                  <div key={item.label} className="bg-[#141414] p-8">
+                    <p className="text-white font-semibold mb-3">{item.label}</p>
+                    <p className="text-sm text-[#888] leading-relaxed">{item.body}</p>
                   </div>
-                  <h2 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent">
-                    Featured Projects
-                  </h2>
-                  <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-                    Explore our latest cloud solutions built with AWS services
+                ))}
+              </div>
+            </section>
+
+            {/* Divider */}
+            <div className="border-t border-[#2a2a2a]" />
+
+            {/* Projects */}
+            <section className="max-w-6xl mx-auto px-6 py-20">
+              <div className="flex items-end justify-between mb-10">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[#777] mb-2">
+                    Our work
                   </p>
-                </motion.div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {projects.map((project, index) => (
-                    <ProjectCard key={index} {...project} index={index} />
-                  ))}
+                  <h2 className="text-3xl font-bold text-white">Featured Projects</h2>
                 </div>
+                <Server className="w-5 h-5 text-[#555]" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {projects.map((project, index) => (
+                  <ProjectCard key={index} {...project} index={index} />
+                ))}
               </div>
             </section>
 
-            {/* CTA Section */}
-            <section className="relative py-32 px-6">
-              <div className="max-w-4xl mx-auto text-center">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="relative"
+            {/* Divider */}
+            <div className="border-t border-[#2a2a2a]" />
+
+            {/* CTA */}
+            <section className="max-w-6xl mx-auto px-6 py-20">
+              <div className="border border-[#2a2a2a] rounded p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                <div>
+                  <Zap className="w-6 h-6 text-[#FF9900] mb-4" />
+                  <h2 className="text-2xl font-bold text-white mb-2">
+                    Ready to build the future?
+                  </h2>
+                  <p className="text-[#888] text-sm max-w-md">
+                    Workshops, hackathons, and cloud certification prep — all at no
+                    cost to Penn State students.
+                  </p>
+                </div>
+                <a
+                  href={LINKTREE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0 px-6 py-3 bg-[#FF9900] text-black font-bold text-sm rounded transition-opacity hover:opacity-90"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-[#FF9900] rounded-3xl blur-xl opacity-15"></div>
-                  <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 backdrop-blur-sm p-12 rounded-3xl border border-gray-700 shadow-xl">
-                    <Zap className="w-16 h-16 text-[#FF9900] mx-auto mb-6" />
-                    <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                      Ready to Build the Future?
-                    </h2>
-                    <p className="text-xl text-gray-300 mb-8">
-                      Join us for workshops, hackathons, and cloud certification
-                      prep sessions.
-                    </p>
-                    <motion.a
-                      href={LINKTREE_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="inline-block px-10 py-4 bg-gradient-to-r from-orange-500 to-[#FF9900] hover:from-orange-400 hover:to-orange-500 text-white rounded-xl font-semibold text-lg shadow-lg shadow-orange-500/30 transition-all"
-                    >
-                      Get Started Today
-                    </motion.a>
-                  </div>
-                </motion.div>
+                  Get Started Today
+                </a>
               </div>
             </section>
           </motion.div>
         )}
 
+        {/* EVENTS */}
         {activeTab === "events" && (
           <motion.div
             key="events"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            {/* Events Hero */}
-            <section className="relative py-24 px-6">
-              <div className="max-w-7xl mx-auto text-center relative z-10">
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="mb-6 inline-flex items-center gap-2 px-4 py-2 bg-orange-500/15 backdrop-blur-sm rounded-full border border-orange-500/30"
-                >
-                  <CalendarDays className="w-4 h-4 text-[#FF9900]" />
-                  <span className="text-orange-300">Club Events</span>
-                </motion.div>
+            <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
+                Club Events
+              </p>
+              <div className="flex items-end gap-3 mb-2">
+                <CalendarDays className="w-6 h-6 text-[#555] mb-1" />
+                <h1 className="text-5xl font-bold text-white leading-none">Events</h1>
+              </div>
+              <p className="text-[#888] mt-4 max-w-xl">
+                Workshops, study groups, hackathons, and more.
+              </p>
+            </section>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.15 }}
-                  className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-orange-400 via-[#FF9900] to-orange-500 bg-clip-text text-transparent"
-                >
-                  Events
-                </motion.h1>
+            <div className="border-t border-[#2a2a2a] mt-10" />
 
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                  className="text-xl text-gray-400 max-w-2xl mx-auto"
-                >
-                  Workshops, study groups, hackathons, and more — come learn,
-                  build, and grow with us.
-                </motion.p>
+            <section className="max-w-6xl mx-auto px-6 py-14">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#777] mb-8">
+                Upcoming
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {upcomingEvents.map((event, index) => (
+                  <EventCard key={index} {...event} index={index} />
+                ))}
               </div>
             </section>
 
-            {/* Upcoming Events */}
-            <section className="relative pb-20 px-6">
-              <div className="max-w-7xl mx-auto">
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  className="text-3xl font-bold text-white mb-8 flex items-center gap-3"
-                >
-                  <span className="w-2 h-8 bg-gradient-to-b from-orange-400 to-[#FF9900] rounded-full inline-block" />
-                  Upcoming Events
-                </motion.h2>
+            <div className="border-t border-[#2a2a2a]" />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-                  {upcomingEvents.map((event, index) => (
-                    <EventCard key={index} {...event} index={index} />
-                  ))}
-                </div>
+            <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#555] mb-8">
+                Past events
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {pastEvents.map((event, index) => (
+                  <EventCard key={index} {...event} index={index} isPast={true} />
+                ))}
               </div>
             </section>
+          </motion.div>
+        )}
 
-            {/* Past Events */}
-            <section className="relative pb-32 px-6">
-              <div className="max-w-7xl mx-auto">
-                <motion.h2
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  className="text-3xl font-bold text-gray-400 mb-8 flex items-center gap-3"
-                >
-                  <span className="w-2 h-8 bg-gradient-to-b from-gray-500 to-gray-600 rounded-full inline-block" />
-                  Past Events
-                </motion.h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-                  {pastEvents.map((event, index) => (
-                    <EventCard
-                      key={index}
-                      {...event}
-                      index={index}
-                      isPast={true}
-                    />
-                  ))}
-                </div>
+        {/* TEAM */}
+        {activeTab === "team" && (
+          <motion.div
+            key="team"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
+                Our Team
+              </p>
+              <div className="flex items-end gap-3 mb-2">
+                <Users className="w-6 h-6 text-[#555] mb-1" />
+                <h1 className="text-5xl font-bold text-white leading-none">
+                  Meet the Team
+                </h1>
               </div>
+              <p className="text-[#888] mt-4 max-w-xl">
+                The people behind AWS Cloud Club at Penn State.
+              </p>
+            </section>
+
+            <div className="border-t border-[#2a2a2a] mt-10" />
+
+            <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {teamMembers.map((member, index) => (
+                  <TeamCard key={index} {...member} index={index} />
+                ))}
+              </div>
+            </section>
+          </motion.div>
+        )}
+
+        {/* GALLERY */}
+        {activeTab === "gallery" && (
+          <motion.div
+            key="gallery"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
+                Photo Gallery
+              </p>
+              <div className="flex items-end gap-3 mb-2">
+                <Camera className="w-6 h-6 text-[#555] mb-1" />
+                <h1 className="text-5xl font-bold text-white leading-none">Gallery</h1>
+              </div>
+              <p className="text-[#888] mt-4 max-w-xl">
+                Highlights from our workshops, hackathons, and club events.
+              </p>
+            </section>
+
+            <div className="border-t border-[#2a2a2a] mt-10" />
+
+            <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-[#2a2a2a] auto-rows-[200px]">
+                {galleryItems.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    className={`relative bg-[#161616] group cursor-pointer overflow-hidden ${item.span}`}
+                  >
+                    {/* Placeholder */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Camera className="w-8 h-8 text-[#333]" />
+                    </div>
+
+                    {/* Caption */}
+                    <div className="absolute bottom-0 inset-x-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-200 bg-[#141414] border-t border-[#2a2a2a]">
+                      <p className="text-white text-sm font-medium">{item.label}</p>
+                      <p className="text-[#777] text-xs mt-0.5">{item.date}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              <p className="text-[#555] text-xs mt-6">
+                Photos coming soon — check back after our next event.
+              </p>
             </section>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Footer */}
-      <footer className="relative py-12 px-6 border-t border-gray-800">
-        <div className="max-w-7xl mx-auto text-center text-gray-500">
-          <p>&copy; 2026 AWS Cloud Club at Penn State. All rights reserved.</p>
+      <div className="border-t border-[#2a2a2a]">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Cloud className="w-4 h-4 text-[#FF9900]" />
+            <span className="text-xs text-[#555] font-medium">AWS Cloud Club at Penn State</span>
+          </div>
+          <p className="text-xs text-[#555]">&copy; 2026</p>
         </div>
-      </footer>
+      </div>
     </div>
   );
 }
