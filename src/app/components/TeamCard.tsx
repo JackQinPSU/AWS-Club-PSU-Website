@@ -48,15 +48,17 @@ export function TeamCard({ name, title, linkedin, photo, index }: TeamCardProps)
       <div className="p-4 border-t border-[#2a2a2a]">
         <p className="text-sm font-semibold text-white">{name}</p>
         <p className="text-xs text-[#FF9900] mt-0.5">{title}</p>
-        <a
-          href={linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-3 flex items-center gap-1.5 text-xs text-[#666] hover:text-white transition-colors"
-        >
-          <Linkedin className="w-3.5 h-3.5" />
-          LinkedIn
-        </a>
+        {linkedin && (
+          <a
+            href={linkedin.startsWith('http') ? linkedin : `https://${linkedin}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 flex items-center gap-1.5 text-xs text-[#666] hover:text-white transition-colors"
+          >
+            <Linkedin className="w-3.5 h-3.5" />
+            LinkedIn
+          </a>
+        )}
       </div>
     </motion.div>
   );

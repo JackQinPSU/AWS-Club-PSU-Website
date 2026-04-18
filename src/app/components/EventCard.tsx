@@ -10,6 +10,7 @@ interface EventCardProps {
   capacity: string;
   tag: string;
   tagColor: string;
+  rsvp_url?: string;
   index: number;
   isPast?: boolean;
 }
@@ -23,6 +24,7 @@ export function EventCard({
   capacity,
   tag,
   tagColor,
+  rsvp_url,
   index,
   isPast = false,
 }: EventCardProps) {
@@ -71,10 +73,15 @@ export function EventCard({
         </div>
       </div>
 
-      {!isPast && (
-        <button className="mt-5 w-full py-2 border border-[#FF9900] text-[#FF9900] text-xs font-bold uppercase tracking-wider rounded hover:bg-[#FF9900] hover:text-black transition-colors">
+      {!isPast && rsvp_url && (
+        <a
+          href={rsvp_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 block w-full py-2 text-center border border-[#FF9900] text-[#FF9900] text-xs font-bold uppercase tracking-wider rounded hover:bg-[#FF9900] hover:text-black transition-colors"
+        >
           RSVP Now
-        </button>
+        </a>
       )}
     </motion.div>
   );

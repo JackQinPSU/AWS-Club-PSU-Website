@@ -1,136 +1,80 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Cloud, CalendarDays, Users, Camera, Server, Zap } from "lucide-react";
 import { ProjectCard } from "./components/ProjectCard";
 import { EventCard } from "./components/EventCard";
 import { TeamCard } from "./components/TeamCard";
+import { supabase } from "../lib/supabase";
+import { TAG_COLORS } from "../lib/types";
+import type { Event, TeamMember, GalleryAlbum, GalleryPhoto } from "../lib/types";
 
 const LINKTREE_URL =
   "https://linktr.ee/aws.psu?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGn1h7pSofemCCtxrAGYLR_sKkt21hPeDtdtneMT8Zo8DyVj_mtI40F91hTFNE_aem_PFCGIbrpMFgF-eBIXb0cpA";
 
 type Tab = "home" | "events" | "team" | "gallery";
 
+const projects = [
+  {
+    title: "Serverless API Gateway",
+    description:
+      "Built a scalable REST API using AWS Lambda, API Gateway, and DynamoDB. Handles 10,000+ requests per second with automatic scaling and fault tolerance.",
+    technologies: ["AWS Lambda", "API Gateway", "DynamoDB", "Node.js"],
+    gradient: "",
+  },
+  {
+    title: "Cloud Infrastructure Automation",
+    description:
+      "Developed infrastructure-as-code solution using AWS CDK and CloudFormation. Automated deployment of multi-tier applications with CI/CD integration.",
+    technologies: ["AWS CDK", "CloudFormation", "EC2", "S3", "Python"],
+    gradient: "",
+  },
+  {
+    title: "Real-time Data Pipeline",
+    description:
+      "Engineered real-time data processing pipeline using AWS Kinesis and Lambda. Processes and analyzes streaming data from IoT devices with sub-second latency.",
+    technologies: ["Kinesis", "Lambda", "Athena", "QuickSight"],
+    gradient: "",
+  },
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>("home");
+  const [events, setEvents] = useState<Event[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [galleryAlbums, setGalleryAlbums] = useState<GalleryAlbum[]>([]);
+  const [selectedAlbum, setSelectedAlbum] = useState<GalleryAlbum | null>(null);
+  const [albumPhotos, setAlbumPhotos] = useState<GalleryPhoto[]>([]);
+  const [loadingPhotos, setLoadingPhotos] = useState(false);
 
-  const projects = [
-    {
-      title: "Serverless API Gateway",
-      description:
-        "Built a scalable REST API using AWS Lambda, API Gateway, and DynamoDB. Handles 10,000+ requests per second with automatic scaling and fault tolerance.",
-      technologies: ["AWS Lambda", "API Gateway", "DynamoDB", "Node.js"],
-      gradient: "",
-    },
-    {
-      title: "Cloud Infrastructure Automation",
-      description:
-        "Developed infrastructure-as-code solution using AWS CDK and CloudFormation. Automated deployment of multi-tier applications with CI/CD integration.",
-      technologies: ["AWS CDK", "CloudFormation", "EC2", "S3", "Python"],
-      gradient: "",
-    },
-    {
-      title: "Real-time Data Pipeline",
-      description:
-        "Engineered real-time data processing pipeline using AWS Kinesis and Lambda. Processes and analyzes streaming data from IoT devices with sub-second latency.",
-      technologies: ["Kinesis", "Lambda", "Athena", "QuickSight"],
-      gradient: "",
-    },
-  ];
+  useEffect(() => {
+    const fetchAll = async () => {
+      const [eventsRes, teamRes, albumsRes] = await Promise.all([
+        supabase.from("events").select("*").order("sort_order").order("created_at", { ascending: false }),
+        supabase.from("team_members").select("*").order("sort_order").order("created_at"),
+        supabase.from("gallery_albums").select("*").order("sort_order").order("created_at", { ascending: false }),
+      ]);
+      setEvents(eventsRes.data ?? []);
+      setTeamMembers(teamRes.data ?? []);
+      setGalleryAlbums(albumsRes.data ?? []);
+    };
+    fetchAll();
+  }, []);
 
-  const upcomingEvents = [
-    {
-      title: "Serverless Workshop: Build & Deploy",
-      description:
-        "Hands-on workshop where you'll build and deploy a full serverless application using AWS Lambda, API Gateway, and DynamoDB from scratch.",
-      date: "April 12, 2026",
-      time: "2:00 PM – 5:00 PM",
-      location: "IST Building, Room 220",
-      capacity: "40 spots available",
-      tag: "Workshop",
-      tagColor: "text-blue-400 border-blue-400/40",
-    },
-    {
-      title: "Cloud Cert Study Group – AWS SAA-C03",
-      description:
-        "Weekly collaborative study session for students preparing for the AWS Solutions Architect Associate exam. Bring your questions!",
-      date: "April 18, 2026",
-      time: "6:00 PM – 8:00 PM",
-      location: "Pattee Library, Collaboration Room 3",
-      capacity: "25 spots available",
-      tag: "Study Group",
-      tagColor: "text-green-400 border-green-400/40",
-    },
-    {
-      title: "Guest Speaker: AWS Solutions Architect",
-      description:
-        "Industry professional from Amazon Web Services joins us to talk about real-world cloud architecture, career paths, and the AWS ecosystem.",
-      date: "April 25, 2026",
-      time: "5:30 PM – 7:00 PM",
-      location: "Westgate Building, Auditorium A",
-      capacity: "100 seats",
-      tag: "Speaker",
-      tagColor: "text-purple-400 border-purple-400/40",
-    },
-    {
-      title: "Cloud Hackathon: Build for Impact",
-      description:
-        "24-hour hackathon challenging teams to build cloud-powered solutions addressing real-world problems. Prizes, food, and AWS credits included.",
-      date: "May 3–4, 2026",
-      time: "10:00 AM – 10:00 AM (24 hrs)",
-      location: "HUB Robeson Center, Innovation Lab",
-      capacity: "Unlimited — form a team of 2–4",
-      tag: "Hackathon",
-      tagColor: "text-[#FF9900] border-[#FF9900]/40",
-    },
-  ];
+  const openAlbum = async (album: GalleryAlbum) => {
+    setSelectedAlbum(album);
+    setLoadingPhotos(true);
+    const { data } = await supabase
+      .from("gallery_photos")
+      .select("*")
+      .eq("album_id", album.id)
+      .order("sort_order")
+      .order("created_at");
+    setAlbumPhotos(data ?? []);
+    setLoadingPhotos(false);
+  };
 
-  const pastEvents = [
-    {
-      title: "Intro to AWS: Cloud Fundamentals",
-      description:
-        "Beginner-friendly overview of AWS core services including EC2, S3, RDS, and IAM. Perfect for students just getting started with cloud.",
-      date: "March 7, 2026",
-      time: "3:00 PM – 5:00 PM",
-      location: "IST Building, Room 220",
-      capacity: "38 attended",
-      tag: "Workshop",
-      tagColor: "text-[#666] border-[#444]",
-    },
-    {
-      title: "Resume & LinkedIn Review Session",
-      description:
-        "Club officers and alumni provided feedback on resumes and LinkedIn profiles, with a focus on cloud and DevOps roles.",
-      date: "March 21, 2026",
-      time: "4:00 PM – 6:00 PM",
-      location: "Zoom (Virtual)",
-      capacity: "22 attended",
-      tag: "Career",
-      tagColor: "text-[#666] border-[#444]",
-    },
-  ];
-
-  const teamMembers = [
-    { name: "Alex Johnson", title: "President", linkedin: "#" },
-    { name: "Maya Patel", title: "Vice President", linkedin: "#" },
-    { name: "Chris Lee", title: "Technical Lead", linkedin: "#" },
-    { name: "Sarah Kim", title: "Events Coordinator", linkedin: "#" },
-    { name: "Jordan Rivera", title: "Marketing Lead", linkedin: "#" },
-    { name: "Taylor Chen", title: "Secretary", linkedin: "#" },
-    { name: "Morgan Davis", title: "Treasurer", linkedin: "#" },
-    { name: "Casey Wilson", title: "Social Media Manager", linkedin: "#" },
-  ];
-
-  const galleryItems = [
-    { label: "Serverless Workshop", date: "Feb 2026", span: "col-span-2" },
-    { label: "Club Kickoff", date: "Jan 2026", span: "" },
-    { label: "AWS Hackathon", date: "Nov 2025", span: "" },
-    { label: "Guest Speaker Night", date: "Oct 2025", span: "" },
-    { label: "Study Group Session", date: "Mar 2026", span: "" },
-    { label: "Resume Review Day", date: "Mar 2026", span: "col-span-2" },
-    { label: "Cloud Cert Prep", date: "Feb 2026", span: "" },
-    { label: "Team Meetup", date: "Dec 2025", span: "" },
-    { label: "Industry Panel", date: "Apr 2026", span: "" },
-  ];
+  const upcomingEvents = events.filter(e => !e.is_past);
+  const pastEvents = events.filter(e => e.is_past);
 
   const navItems: { label: string; tab: Tab }[] = [
     { label: "Home", tab: "home" },
@@ -351,11 +295,27 @@ export default function App() {
               <p className="text-xs uppercase tracking-[0.2em] text-[#777] mb-8">
                 Upcoming
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {upcomingEvents.map((event, index) => (
-                  <EventCard key={index} {...event} index={index} />
-                ))}
-              </div>
+              {upcomingEvents.length === 0 ? (
+                <p className="text-[#555] text-sm">No upcoming events right now — check back soon.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {upcomingEvents.map((event, index) => (
+                    <EventCard
+                      key={event.id}
+                      title={event.title}
+                      description={event.description}
+                      date={event.date}
+                      time={event.time}
+                      location={event.location}
+                      capacity={event.capacity}
+                      tag={event.tag}
+                      tagColor={TAG_COLORS[event.tag] ?? "text-gray-400 border-gray-400/40"}
+                      rsvp_url={event.rsvp_url}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
 
             <div className="border-t border-[#2a2a2a]" />
@@ -364,11 +324,27 @@ export default function App() {
               <p className="text-xs uppercase tracking-[0.2em] text-[#555] mb-8">
                 Past events
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {pastEvents.map((event, index) => (
-                  <EventCard key={index} {...event} index={index} isPast={true} />
-                ))}
-              </div>
+              {pastEvents.length === 0 ? (
+                <p className="text-[#555] text-sm">No past events yet.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {pastEvents.map((event, index) => (
+                    <EventCard
+                      key={event.id}
+                      title={event.title}
+                      description={event.description}
+                      date={event.date}
+                      time={event.time}
+                      location={event.location}
+                      capacity={event.capacity}
+                      tag={event.tag}
+                      tagColor="text-[#666] border-[#444]"
+                      index={index}
+                      isPast={true}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
           </motion.div>
         )}
@@ -400,11 +376,22 @@ export default function App() {
             <div className="border-t border-[#2a2a2a] mt-10" />
 
             <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {teamMembers.map((member, index) => (
-                  <TeamCard key={index} {...member} index={index} />
-                ))}
-              </div>
+              {teamMembers.length === 0 ? (
+                <p className="text-[#555] text-sm">Team info coming soon.</p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                  {teamMembers.map((member, index) => (
+                    <TeamCard
+                      key={member.id}
+                      name={member.name}
+                      title={member.title}
+                      linkedin={member.linkedin}
+                      photo={member.photo_url ?? undefined}
+                      index={index}
+                    />
+                  ))}
+                </div>
+              )}
             </section>
           </motion.div>
         )}
@@ -418,49 +405,111 @@ export default function App() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
-              <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
-                Photo Gallery
-              </p>
-              <div className="flex items-end gap-3 mb-2">
-                <Camera className="w-6 h-6 text-[#555] mb-1" />
-                <h1 className="text-5xl font-bold text-white leading-none">Gallery</h1>
-              </div>
-              <p className="text-[#888] mt-4 max-w-xl">
-                Highlights from our workshops, hackathons, and club events.
-              </p>
-            </section>
-
-            <div className="border-t border-[#2a2a2a] mt-10" />
-
-            <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-px bg-[#2a2a2a] auto-rows-[200px]">
-                {galleryItems.map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
-                    className={`relative bg-[#161616] group cursor-pointer overflow-hidden ${item.span}`}
+            {selectedAlbum ? (
+              /* ── Sub-gallery: photos for one album ── */
+              <>
+                <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
+                  <button
+                    onClick={() => { setSelectedAlbum(null); setAlbumPhotos([]); }}
+                    className="text-xs text-[#777] hover:text-white transition-colors mb-6 flex items-center gap-1.5"
                   >
-                    {/* Placeholder */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <Camera className="w-8 h-8 text-[#333]" />
-                    </div>
+                    ← All albums
+                  </button>
+                  <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
+                    Photo Gallery
+                  </p>
+                  <h1 className="text-5xl font-bold text-white leading-none">{selectedAlbum.label}</h1>
+                  <p className="text-[#888] mt-4 text-sm">{selectedAlbum.date}</p>
+                </section>
 
-                    {/* Caption */}
-                    <div className="absolute bottom-0 inset-x-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-200 bg-[#141414] border-t border-[#2a2a2a]">
-                      <p className="text-white text-sm font-medium">{item.label}</p>
-                      <p className="text-[#777] text-xs mt-0.5">{item.date}</p>
+                <div className="border-t border-[#2a2a2a] mt-10" />
+
+                <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
+                  {loadingPhotos ? (
+                    <p className="text-[#555] text-sm">Loading…</p>
+                  ) : albumPhotos.length === 0 ? (
+                    <p className="text-[#555] text-sm">No photos yet for this event.</p>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                      {albumPhotos.map((photo, index) => (
+                        <motion.div
+                          key={photo.id}
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: index * 0.04 }}
+                          className="aspect-square overflow-hidden rounded bg-[#161616]"
+                        >
+                          <img
+                            src={photo.image_url}
+                            alt={photo.caption || selectedAlbum.label}
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          />
+                        </motion.div>
+                      ))}
                     </div>
-                  </motion.div>
-                ))}
-              </div>
-              <p className="text-[#555] text-xs mt-6">
-                Photos coming soon — check back after our next event.
-              </p>
-            </section>
+                  )}
+                </section>
+              </>
+            ) : (
+              /* ── Album grid ── */
+              <>
+                <section className="max-w-6xl mx-auto px-6 pt-20 pb-6">
+                  <p className="text-xs uppercase tracking-[0.2em] text-[#FF9900] mb-4">
+                    Photo Gallery
+                  </p>
+                  <div className="flex items-end gap-3 mb-2">
+                    <Camera className="w-6 h-6 text-[#555] mb-1" />
+                    <h1 className="text-5xl font-bold text-white leading-none">Gallery</h1>
+                  </div>
+                  <p className="text-[#888] mt-4 max-w-xl">
+                    Highlights from our workshops, hackathons, and club events.
+                  </p>
+                </section>
+
+                <div className="border-t border-[#2a2a2a] mt-10" />
+
+                <section className="max-w-6xl mx-auto px-6 py-14 pb-24">
+                  {galleryAlbums.length === 0 ? (
+                    <p className="text-[#555] text-sm">
+                      Photos coming soon — check back after our next event.
+                    </p>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                      {galleryAlbums.map((album, index) => (
+                        <motion.div
+                          key={album.id}
+                          initial={{ opacity: 0, y: 16 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.3, delay: index * 0.06 }}
+                          onClick={() => openAlbum(album)}
+                          className="cursor-pointer group border border-[#2a2a2a] rounded overflow-hidden hover:border-[#404040] transition-colors"
+                        >
+                          <div className="aspect-video bg-[#161616] overflow-hidden">
+                            {album.cover_image_url ? (
+                              <img
+                                src={album.cover_image_url}
+                                alt={album.label}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <Camera className="w-8 h-8 text-[#333]" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-4 border-t border-[#2a2a2a]">
+                            <p className="text-sm font-semibold text-white">{album.label}</p>
+                            <p className="text-xs text-[#777] mt-0.5">{album.date}</p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
