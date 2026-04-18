@@ -30,6 +30,7 @@ export default function GalleryAdmin() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   const [albumForm, setAlbumForm] = useState<AlbumDraft>(BLANK_ALBUM);
 
   const coverFileRef = useRef<HTMLInputElement>(null);
@@ -109,12 +110,16 @@ export default function GalleryAdmin() {
   const uploadPhotos = async (files: FileList) => {
     if (!selectedAlbum) return;
     setUploading(true);
+    setUploadError('');
     const isFirstUpload = photos.length === 0;
+    let anyError = '';
 
     await Promise.all(Array.from(files).map(async (file, i) => {
       const path = `albums/${selectedAlbum.id}/${Date.now()}-${i}.${file.name.split('.').pop()}`;
       const { error } = await supabase.storage.from('gallery').upload(path, file);
-      if (!error) {
+      if (error) {
+        anyError = error.message;
+      } else {
         const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(path);
         await supabase.from('gallery_photos').insert({
           album_id: selectedAlbum.id,
@@ -128,6 +133,7 @@ export default function GalleryAdmin() {
       }
     }));
 
+    if (anyError) setUploadError(`Upload failed: ${anyError}`);
     setUploading(false);
     loadPhotos(selectedAlbum.id);
     loadAlbums();
@@ -255,6 +261,10 @@ export default function GalleryAdmin() {
             </button>
           </div>
         </div>
+
+        {uploadError && (
+          <p className="text-red-400 text-sm mb-4">{uploadError}</p>
+        )}
 
         {photos.length === 0 ? (
           <div className="border border-dashed border-[#2a2a2a] rounded-lg p-16 flex flex-col items-center gap-3 text-center">
